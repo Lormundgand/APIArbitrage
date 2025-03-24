@@ -5,21 +5,32 @@ import argparse
 import requests
 
 # Configuration API
-API_KEY = "8ca5b7ba84282bf3c7a90ef9155f6ddf"
+API_KEY = "8ca5b7ba84282bf3c7a90ef9155f6ddf" #royer.oscar
+API_KEY = "1a31f587893f36107eef4cc74960d0f2" #royer.oscar2
 parser = argparse.ArgumentParser(description='Détecteur d\'opportunités d\'arbitrage de paris sportifs')
 parser.add_argument('--api-key', type=str, default=API_KEY, help='API key pour The Odds API')
 parser.add_argument('--sport', type=str, default='mma_mixed_martial_arts', help='Sport à analyser (ou "all" pour tous les sports)')
 parser.add_argument('--regions', type=str, default='eu', help='Régions des bookmakers')
-parser.add_argument('--markets', type=str, default='h2h,totals', help='Marchés à analyser')
+parser.add_argument('--markets', type=str, default='h2h, totals', help='Marchés à analyser')
 parser.add_argument('--min-profit', type=float, default=1.0, help='Gain minimal en pourcentage')
 parser.add_argument('--investment', type=float, default=100, help='Montant d\'investissement en dollars')
 args = parser.parse_args()
 
-# Liste des sports à analyser
-SPORTS = ['mma_mixed_martial_arts', 'boxing', 'soccer_uefa_champions_league', 'basketball_nba', 'tennis_atp']
-if args.sport != 'all':
-    SPORTS = [args.sport]
+def get_all_sports():
+    """Récupère la liste des sports disponibles depuis l'API"""
+    response = requests.get(f'https://api.the-odds-api.com/v4/sports', params={'apiKey': API_KEY})
+    
+    if response.status_code != 200:
+        print(f"Erreur lors de la récupération des sports : {response.status_code} - {response.text}")
+        return []
+    
+    sports_data = response.json()
+    return [sport['key'] for sport in sports_data]  # On extrait uniquement les clés des sports
 
+
+# Liste des sports à analyser
+# SPORTS = get_all_sports() if args.sport == 'all' else [args.sport]
+SPORTS = ['americanfootball_nfl', 'baseball_mlb', 'basketball_nba', 'boxing_boxing', 'icehockey_nhl', 'mma_mixed_martial_arts', 'rugbyleague_nrl']
 # Configuration des paramètres
 REGIONS = args.regions
 MARKETS = args.markets
@@ -201,12 +212,14 @@ def main():
             'oddsFormat': ODDS_FORMAT,
             'dateFormat': DATE_FORMAT
         })
-        
+        print('Remaining requests', response.headers['x-requests-remaining'])
+        print('Used requests', response.headers['x-requests-used'])
         if response.status_code != 200:
             print(f'Échec de récupération des cotes pour {sport}: status_code {response.status_code}, réponse {response.text}')
             continue
         
         data = response.json()
+        
         if data:
             all_sports_data.append({
                 'sport_key': sport,

@@ -13,7 +13,7 @@ DEFAULT_DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1351188640826658858/
 DEFAULT_SPORTS = ""
 DEFAULT_MIN_PROFIT = 1.0
 DEFAULT_INVESTMENT = 100
-DEFAULT_BOOKMAKERS = "betclic,Betsson,unibet,winamax,williamhill,888sport,betvictor,matchbook,Betfair,pinnacle,marathonbet,BetOnline.ag,1xbet,coolbet,betanysports,gtbets,mybookieag,Nordic Bet,everygame,suprabets,tipico_de"
+DEFAULT_BOOKMAKERS = "betclic,unibet,winamax"
 
 # Analyse des arguments
 parser = argparse.ArgumentParser(description='Bot d\'arbitrage sportif avec notifications Discord')
@@ -90,6 +90,7 @@ def send_discord_notification(webhook_url, opportunity):
     
     # Envoyer la notification
     response = requests.post(webhook_url, json=message)
+    time.sleep(0.3)
     if response.status_code == 204:
         print(f"Notification envoyée avec succès pour {opportunity['match']} ({opportunity['profit_percentage']}%)")
         return True
