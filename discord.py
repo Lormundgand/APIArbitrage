@@ -10,7 +10,7 @@ from datetime import datetime
 # Configuration par défaut
 DEFAULT_INTERVAL = 120  # 60 sec
 DEFAULT_DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1351188640826658858/fXYj1BQNiEVWJzyTwdcImNfBhnwMd8lSi50PwMtVdwEIhD2WO8U8AbzvGXHkfox5mm4r"
-DEFAULT_SPORTS = ""
+DEFAULT_SPORTS = "mma_mixed_martial_arts,americanfootball_ufl,americanfootball_nfl"
 DEFAULT_MIN_PROFIT = 1.0
 DEFAULT_INVESTMENT = 100
 DEFAULT_BOOKMAKERS = "betclic,unibet,winamax"
@@ -106,10 +106,13 @@ def parse_opportunities_from_output(output):
     current_opp = None
     outcomes = []
     matches_analyzed = 0
+    sports_analyzed = 0
     
     for line in lines:
         # Capture le nombre de matchs analysés
         if "Récupération des données pour" in line:
+            sports_analyzed += 1
+        if "ajoute un sport" in line:
             matches_analyzed += 1
         
         if line.startswith("Opportunité #"):
@@ -173,10 +176,11 @@ def parse_opportunities_from_output(output):
         current_opp["outcomes"] = outcomes
         opportunities.append(current_opp)
     
-    return opportunities, matches_analyzed
+    return opportunities, matches_analyzed, sports_analyzed
 
 def is_valid_bookmaker_opportunity(opportunity):
     """Vérifie si l'opportunité utilise uniquement les bookmakers autorisés"""
+    return True
     if not opportunity or 'outcomes' not in opportunity:
         return False
     
@@ -198,7 +202,6 @@ def run_arbitrage_scan():
     # Construire la commande pour main.py
     cmd = [
         "python", "main.py",
-        "--sport", "all",
         "--min-profit", str(args.min_profit),
         "--investment", str(args.investment)
     ]
@@ -208,10 +211,11 @@ def run_arbitrage_scan():
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         # Analyser la sortie
-        opportunities, matches_analyzed = parse_opportunities_from_output(result.stdout)
+        opportunities, matches_analyzed, sports_analyzed = parse_opportunities_from_output(result.stdout)
         
         # Afficher le nombre de matchs analysés
         print(f"Nombre de matchs analysés: {matches_analyzed}")
+        print(f"Nombre de sports analisés: {sports_analyzed}")
         
         # Filtrer les opportunités par bookmakers
         filtered_opportunities = [opp for opp in opportunities if is_valid_bookmaker_opportunity(opp)]

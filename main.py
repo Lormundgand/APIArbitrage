@@ -9,9 +9,8 @@ API_KEY = "8ca5b7ba84282bf3c7a90ef9155f6ddf" #royer.oscar
 API_KEY = "1a31f587893f36107eef4cc74960d0f2" #royer.oscar2
 parser = argparse.ArgumentParser(description='Détecteur d\'opportunités d\'arbitrage de paris sportifs')
 parser.add_argument('--api-key', type=str, default=API_KEY, help='API key pour The Odds API')
-parser.add_argument('--sport', type=str, default='mma_mixed_martial_arts', help='Sport à analyser (ou "all" pour tous les sports)')
 parser.add_argument('--regions', type=str, default='eu', help='Régions des bookmakers')
-parser.add_argument('--markets', type=str, default='h2h, totals', help='Marchés à analyser')
+parser.add_argument('--markets', type=str, default='totals', help='Marchés à analyser')
 parser.add_argument('--min-profit', type=float, default=1.0, help='Gain minimal en pourcentage')
 parser.add_argument('--investment', type=float, default=100, help='Montant d\'investissement en dollars')
 args = parser.parse_args()
@@ -29,8 +28,8 @@ def get_all_sports():
 
 
 # Liste des sports à analyser
-# SPORTS = get_all_sports() if args.sport == 'all' else [args.sport]
-SPORTS = ['americanfootball_nfl', 'baseball_mlb', 'basketball_nba', 'boxing_boxing', 'icehockey_nhl', 'mma_mixed_martial_arts', 'rugbyleague_nrl']
+# SPORTS = ["boxing_boxing", "mma_mixed_martial_arts", "americanfootball_nfl", "icehockey_nhl"]
+SPORTS = ['americanfootball_nfl', 'americanfootball_cfl', 'baseball_mlb', 'basketball_nba', 'boxing_boxing', 'icehockey_nhl', 'icehockey_ahl', 'mma_mixed_martial_arts', 'rugbyleague_nrl']
 # Configuration des paramètres
 REGIONS = args.regions
 MARKETS = args.markets
@@ -89,6 +88,7 @@ def find_arbitrage_opportunities(sports_data):
         sport_title = sport['sport_title']
         
         for match in sport['matches']:
+            print("\najoute un sport\n")
             match_id = match['id']
             home_team = match['home_team']
             away_team = match['away_team']
