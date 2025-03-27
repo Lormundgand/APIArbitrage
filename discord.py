@@ -10,10 +10,10 @@ from datetime import datetime
 # Configuration par défaut
 DEFAULT_INTERVAL = 120  # 60 sec
 DEFAULT_DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1351188640826658858/fXYj1BQNiEVWJzyTwdcImNfBhnwMd8lSi50PwMtVdwEIhD2WO8U8AbzvGXHkfox5mm4r"
-DEFAULT_SPORTS = "mma_mixed_martial_arts,americanfootball_ufl,americanfootball_nfl"
+DEFAULT_SPORTS = "americanfootball_nfl,americanfootball_cfl,americanfootball_ncaaf,basketball_nba,basketball_euroleague,basketball_wnba,basketball_ncaab,baseball_mlb,icehockey_nhl,soccer_epl,soccer_spain_la_liga,soccer_germany_bundesliga,soccer_italy_serie_a,soccer_france_ligue_one,soccer_uefa_champs_league,soccer_uefa_europa_league,soccer_fifa_world_cup,soccer_conmebol_copa_america,soccer_usa_mls,soccer_brazil_campeonato,soccer_mexico_ligamx,tennis_atp_aus_open_singles,tennis_atp_french_open,tennis_atp_us_open,tennis_atp_wimbledon,tennis_wta_aus_open_singles,tennis_wta_french_open,tennis_wta_us_open,tennis_wta_wimbledon,mma_mixed_martial_arts,boxing_boxing"
 DEFAULT_MIN_PROFIT = 1.0
 DEFAULT_INVESTMENT = 100
-DEFAULT_BOOKMAKERS = "betclic,unibet,winamax"
+DEFAULT_BOOKMAKERS = "betclic,unibet,winamax,marathonbet,nordicbet,pinnacle,suprabets,wiliamhill"
 
 # Analyse des arguments
 parser = argparse.ArgumentParser(description='Bot d\'arbitrage sportif avec notifications Discord')
